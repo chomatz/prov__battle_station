@@ -1,0 +1,8 @@
+---
+
+- name: install system packages
+  ansible.builtin.package:
+    name: "{{ battle_station.package.install }}"
+    state: present
+
+...

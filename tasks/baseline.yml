@@ -9,11 +9,11 @@
         - name: update installed packages
           ansible.builtin.package:
             name: "*"
-            state: present
+            state: latest
 
         - name: install system packages
           ansible.builtin.package:
-            name: "{{ battle_station.package.install }}"
+            name: "{{ battle_station.packages.install }}"
             state: present
 
         - name: enable the grub menu
@@ -46,7 +46,7 @@
 
         - name: install figlet
           ansible.builtin.package:
-            name: "{{ battle_station.package.install }}"
+            name: figlet
             state: present
           run_once: true
 

@@ -1,8 +1,114 @@
 ---
 
-- name: install system packages
-  ansible.builtin.package:
-    name: "{{ battle_station.package.install }}"
-    state: present
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: ensure tasks run only on selected os releases
+      block:
+
+        - name: update installed packages
+          ansible.builtin.package:
+            name: "*"
+            state: present
+
+        - name: install system packages
+          ansible.builtin.package:
+            name: "{{ battle_station.package.install }}"
+            state: present
+
+        - name: enable the grub menu
+          ansible.builtin.command:
+            cmd: grub2-editenv - unset menu_auto_hide
+          register: cmd_grub_menu
+          failed_when:
+            - cmd_grub_menu is failed
+            - "'No such file or directory' not in cmd_grub_menu.msg"
+
+        - name: display boot up messages
+          ansible.builtin.command:
+            cmd: "grubby --remove-args='{{ item }}' --update-kernel=ALL"
+          with_items:
+            - quiet
+            - rhgb
+          register: cmd_verbose_boot
+          failed_when:
+            - cmd_verbose_boot is failed
+            - "'No such file or directory' not in cmd_verbose_boot.msg"
+
+      when: >
+        ansible_distribution == "CentOS" or
+        ansible_distribution == "Fedora" or
+        ansible_distribution == "RedHat" or
+        ansible_distribution == "Rocky"
+
+    - name: use figlet to generate a fancy hostname
+      block:
+
+        - name: install figlet
+          ansible.builtin.package:
+            name: "{{ battle_station.package.install }}"
+            state: present
+          run_once: true
+
+        - name: generate fancy hostname
+          ansible.builtin.command:
+            cmd: figlet -f small "{{ inventory_hostname }}"
+            changed_when: false
+          register: fancy_hostname
+
+      delegate_to: localhost
+
+    - name: check if /etc/motd.d exists
+      ansible.builtin.stat:
+        path: /etc/motd.d
+      register: motd
+
+    - name: set hostname in /etc/motd.d/hostname
+      ansible.builtin.template:
+        src: templates/hostname
+        dest: /etc/motd.d/hostname
+        owner: root
+        group: root
+        mode: "0644"
+      when: motd.stat.exists
+
+    - name: set hostname in /etc/motd
+      ansible.builtin.template:
+        src: templates/hostname
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: "0644"
+      when: not motd.stat.exists
+
+    - name: check if /etc/issue.d exists
+      ansible.builtin.stat:
+        path: /etc/issue.d
+      register: issue
+
+    - name: set hostname in /etc/issue.d/hostname
+      ansible.builtin.template:
+        src: templates/hostname
+        dest: /etc/issue.d/hostname
+        owner: root
+        group: root
+        mode: "0644"
+      when: issue.stat.exists
+
+    - name: set hostname in /etc/issue
+      ansible.builtin.template:
+        src: templates/hostname
+        dest: /etc/issue
+        owner: root
+        group: root
+        mode: "0644"
+      when: not issue.stat.exists
+
+  when: >
+    ansible_distribution == "Archlinux" or
+    ansible_distribution == "CentOS" or
+    ansible_distribution == "Fedora" or
+    ansible_distribution == "RedHat" or
+    ansible_distribution == "Rocky"
 
 ...

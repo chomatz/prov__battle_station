@@ -8,6 +8,7 @@ battle_station:
       - cockpit
       - ethtool
       - firewalld
+      - grubby
       - lm_sensors
       - lsof
       - net-tools

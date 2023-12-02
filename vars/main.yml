@@ -1,2 +1,43 @@
 ---
-# vars file for prov__battlestation
+
+battle_station:
+  packages:
+    install:
+      - bash-completion
+      - bind-utils
+      - cockpit
+      - ethtool
+      - firewalld
+      - lm_sensors
+      - lsof
+      - net-tools
+      - rsync
+      - sos
+      - sysstat
+      - tar
+      - telnet
+      - tmux
+      - unzip
+      - wget
+  services:
+    disable:
+      - dracut-shutdown.service
+      - gssproxy.service
+      - import-state.service
+      - kdump.service
+      - lvm2-monitor.service
+      - nis-domainname.service
+      - plymouth-quit-wait.service
+      - plymouth-quit.service
+      - plymouth-read-write.service
+      - plymouth-start.service
+      - postfix.service
+      - rpcbind.service
+      - rpc-statd-notify.service
+      - sssd.service
+    enable:
+      - cockpit.socket
+      - firewalld.service
+      - sysstat.service
+
+...

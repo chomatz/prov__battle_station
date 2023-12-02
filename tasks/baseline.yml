@@ -35,27 +35,24 @@
             - cmd_verbose_boot is failed
             - "'No such file or directory' not in cmd_verbose_boot.msg"
 
+        - name: disable root access on cockpit
+          lineinfile:
+            path: /etc/pam.d/cockpit
+            line: auth requisite pam_succeed_if.so uid >= 1000
+            insertafter: "#%PAM-1.0"
+          notify: restart and enable cockpit
+
       when: >
         ansible_distribution == "CentOS" or
         ansible_distribution == "Fedora" or
         ansible_distribution == "RedHat" or
         ansible_distribution == "Rocky"
 
-    - name: use figlet to generate a fancy hostname
-      block:
-
-        - name: install figlet
-          ansible.builtin.package:
-            name: figlet
-            state: present
-          run_once: true
-
-        - name: generate fancy hostname
-          ansible.builtin.command:
-            cmd: figlet -f small "{{ inventory_hostname }}"
-            changed_when: false
-          register: fancy_hostname
-
+    - name: generate fancy hostname
+      ansible.builtin.command:
+        cmd: figlet -f small "{{ inventory_hostname }}"
+      changed_when: false
+      register: cmd_figlet_hostname
       delegate_to: localhost
 
     - name: check if /etc/motd.d exists

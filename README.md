@@ -1,7 +1,5 @@
-Role Name
-=========
-
-A brief description of the role goes here.
+# prov__battlestation
+automates system provisioning from scratch
 
 Requirements
 ------------

@@ -1,2 +1,9 @@
 ---
-# handlers file for prov__battlestation
+
+- name: restart and enable cockpit
+  ansible.builtin.service:
+    name: cockpit.socket
+    enabled: true
+    state: restarted
+
+...

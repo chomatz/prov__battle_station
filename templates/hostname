@@ -1,0 +1,1 @@
+{{ cmd_figlet_hostname.stdout }}

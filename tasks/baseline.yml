@@ -10,6 +10,7 @@
           ansible.builtin.package:
             name: "*"
             state: latest
+          ignore_errors: true
 
         - name: enable epel repositories
           ansible.builtin.include_role:
@@ -67,6 +68,28 @@
             create: true
             state: present
             line: "{{ cmd_neofetch_binary.stdout }}"
+
+        - name: disable selected services
+          ansible.builtin.service:
+            name: "{{ item }}"
+            state: stopped
+            enabled: false
+          register: service_disabled
+          failed_when:
+            - service_disabled is failed
+            - "'Could not find the requested service' not in service_disabled.msg"
+          with_items: "{{ battle_station.services.disable }}"
+
+        - name: enable selected services
+          ansible.builtin.service:
+            name: "{{ item }}"
+            state: started
+            enabled: true
+          register: service_enabled
+          failed_when:
+            - service_enabled is failed
+            - "'Could not find the requested service' not in service_enabled.msg"
+          with_items: "{{ battle_station.services.enable }}"
 
       when: >
         ansible_distribution == "CentOS" or

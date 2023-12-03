@@ -11,6 +11,10 @@
             name: "*"
             state: latest
 
+        - name: enable epel repositories
+          ansible.builtin.include_role:
+            name: repo__epel
+
         - name: install system packages
           ansible.builtin.package:
             name: "{{ battle_station.packages.install }}"
@@ -50,6 +54,19 @@
             group: root
             mode: '0644'
           notify: restart and enable chronyd
+
+        - name: locate neofetch binary
+          ansible.builtin.command:
+            cmd: which neofetch
+          changed_when: false
+          register: cmd_neofetch_binary
+
+        - name: configure neofetch to run on user login
+          ansible.builtin.lineinfile:
+            path: /etc/profile.d/neofetch.sh
+            create: true
+            state: present
+            line: "{{ cmd_neofetch_binary.stdout }}"
 
       when: >
         ansible_distribution == "CentOS" or

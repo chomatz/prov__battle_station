@@ -19,6 +19,7 @@ battle_station:
       - grubby
       - lm_sensors
       - lsof
+      - neofetch
       - net-tools
       - rsync
       - sos
@@ -28,6 +29,7 @@ battle_station:
       - tmux
       - unzip
       - wget
+      - which
   services:
     disable:
       - dracut-shutdown.service

@@ -135,7 +135,7 @@
     - name: set hostname in /etc/issue.d/hostname
       ansible.builtin.template:
         src: templates/hostname
-        dest: /etc/issue.d/hostname
+        dest: /etc/issue.d/hostname.issue
         owner: root
         group: root
         mode: "0644"

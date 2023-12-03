@@ -29,10 +29,11 @@
             - cmd_grub_menu is failed
             - "'No such file or directory' not in cmd_grub_menu.msg"
 
-        - name: display boot up messages
+        - name: remove kernel args
           ansible.builtin.command:
             cmd: "grubby --remove-args='{{ item }}' --update-kernel=ALL"
           with_items:
+            - crashkernel
             - quiet
             - rhgb
           register: cmd_verbose_boot

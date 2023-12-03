@@ -10,6 +10,17 @@
           - "@GNOME"
         state: latest
 
+    - name: get the default systemd target
+      ansible.builtin.command:
+        cmd: systemctl get-default
+      changed_when: false
+      register: cmd_systemd_target
+
+    - name: set system to boot into graphical mode
+      ansible.builtin.command:
+        cmd: "systemctl set-default graphical.target"
+      when: cmd_systemd_target.stdout != "graphical.target"
+
   when: >
     ansible_distribution == "CentOS" or
     ansible_distribution == "Fedora" or

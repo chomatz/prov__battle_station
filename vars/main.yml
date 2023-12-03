@@ -1,6 +1,6 @@
 ---
 
-battle_station:
+linux_station:
   chrony:
     # sample time_sources:
     # pool pool.ntp.org
@@ -9,47 +9,68 @@ battle_station:
     source: |
       pool pool.ntp.org iburst
   packages:
-    install:
-      - bash-completion
-      - bind-utils
-      - chrony
-      - cockpit
-      - ethtool
-      - firewalld
-      - grubby
-      - lm_sensors
-      - lsof
-      - neofetch
-      - net-tools
-      - rsync
-      - sos
-      - sysstat
-      - tar
-      - telnet
-      - tmux
-      - unzip
-      - wget
-      - which
+    base:
+      install:
+        - bash-completion
+        - bind-utils
+        - chrony
+        - cockpit
+        - ethtool
+        - firewalld
+        - grubby
+        - lm_sensors
+        - lsof
+        - neofetch
+        - net-tools
+        - rsync
+        - sos
+        - sysstat
+        - tar
+        - telnet
+        - tmux
+        - unzip
+        - wget
+        - which
+    battle:
+      install:
+        - steam
+    desktop:
+      install:
+        - electrum
+        - firefox
+        - vim
   services:
     disable:
-      - dracut-shutdown.service
-      - gssproxy.service
-      - import-state.service
-      - kdump.service
-      - lvm2-monitor.service
-      - nis-domainname.service
-      - plymouth-quit-wait.service
-      - plymouth-quit.service
-      - plymouth-read-write.service
-      - plymouth-start.service
-      - postfix.service
-      - rpcbind.service
-      - rpc-statd-notify.service
-      - sssd.service
+      - abrt
+      - avahi-daemon
+      - colord
+      - cups
+      - dracut-shutdown
+      - fwupd
+      - gssproxy
+      - import-state
+      - kdump
+      - livesys
+      - livesys-late
+      - low-memory-monitor
+      - ModemManager
+      - nis-domainname
+      - pcscd
+      - plymouth-quit-wait
+      - plymouth-quit
+      - plymouth-read-write
+      - plymouth-start
+      - postfix
+      - rpcbind
+      - rpc-statd-notify
+      - sssd
+      - sssd-kcm
+      - switcheroo-control
+      - systemd-oomd
     enable:
-      - chrony.service
+      - chrony
       - cockpit.socket
-      - firewalld.service
-      - sysstat.service
+      - firewalld
+      - sysstat
 
 ...

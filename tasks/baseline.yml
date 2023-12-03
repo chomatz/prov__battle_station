@@ -18,7 +18,7 @@
 
         - name: install system packages
           ansible.builtin.package:
-            name: "{{ battle_station.packages.install }}"
+            name: "{{ linux_station.packages.base.install }}"
             state: present
 
         - name: enable the grub menu
@@ -78,7 +78,7 @@
           failed_when:
             - service_disabled is failed
             - "'Could not find the requested service' not in service_disabled.msg"
-          with_items: "{{ battle_station.services.disable }}"
+          with_items: "{{ linux_station.services.disable }}"
 
         - name: enable selected services
           ansible.builtin.service:
@@ -89,7 +89,7 @@
           failed_when:
             - service_enabled is failed
             - "'Could not find the requested service' not in service_enabled.msg"
-          with_items: "{{ battle_station.services.enable }}"
+          with_items: "{{ linux_station.services.enable }}"
 
       when: >
         ansible_distribution == "CentOS" or

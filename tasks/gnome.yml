@@ -1,0 +1,19 @@
+---
+
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: install gnome desktop
+      ansible.builtin.package:
+        name:
+          - "@base-x"
+          - "@GNOME"
+        state: latest
+
+  when: >
+    ansible_distribution == "CentOS" or
+    ansible_distribution == "Fedora" or
+    ansible_distribution == "RedHat" or
+    ansible_distribution == "Rocky"
+
+...

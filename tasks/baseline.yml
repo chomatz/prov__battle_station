@@ -99,7 +99,7 @@
 
     - name: generate fancy hostname
       ansible.builtin.command:
-        cmd: figlet -f small "{{ inventory_hostname }}"
+        cmd: figlet -w 256 -f small "{{ inventory_hostname }}"
       changed_when: false
       register: cmd_figlet_hostname
       delegate_to: localhost

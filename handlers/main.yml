@@ -1,5 +1,11 @@
 ---
 
+- name: restart and enable chronyd
+  ansible.builtin.service:
+    name: chronyd.service
+    enabled: true
+    state: restarted
+
 - name: restart and enable cockpit
   ansible.builtin.service:
     name: cockpit.socket

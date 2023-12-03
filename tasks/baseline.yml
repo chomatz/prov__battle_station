@@ -36,11 +36,20 @@
             - "'No such file or directory' not in cmd_verbose_boot.msg"
 
         - name: disable root access on cockpit
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: /etc/pam.d/cockpit
             line: auth requisite pam_succeed_if.so uid >= 1000
             insertafter: "#%PAM-1.0"
           notify: restart and enable cockpit
+
+        - name: set chrony time sources
+          ansible.builtin.template:
+            src: templates/chrony.conf
+            dest: /etc/chrony.conf
+            owner: root
+            group: root
+            mode: '0644'
+          notify: restart and enable chronyd
 
       when: >
         ansible_distribution == "CentOS" or

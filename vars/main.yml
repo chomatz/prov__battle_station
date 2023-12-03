@@ -1,10 +1,18 @@
 ---
 
 battle_station:
+  chrony:
+    # sample time_sources:
+    # pool pool.ntp.org
+    # server server.pool.ntp.org
+    # peer full.server.fqdn
+    source: |
+      pool pool.ntp.org iburst
   packages:
     install:
       - bash-completion
       - bind-utils
+      - chrony
       - cockpit
       - ethtool
       - firewalld
@@ -37,6 +45,7 @@ battle_station:
       - rpc-statd-notify.service
       - sssd.service
     enable:
+      - chrony.service
       - cockpit.socket
       - firewalld.service
       - sysstat.service

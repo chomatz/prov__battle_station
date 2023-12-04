@@ -72,5 +72,8 @@ linux_station:
       - cockpit.socket
       - firewalld
       - sysstat
+  ssh:
+    ping_interval: 60
+    max_timeouts: 2
 
 ...

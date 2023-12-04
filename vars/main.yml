@@ -39,6 +39,16 @@ linux_station:
         - electrum
         - firefox
         - vim
+    powerline:
+      install:
+        base:
+          - powerline
+          - powerline-fonts
+        red_hat:
+          - tmux-powerline
+          - vim-powerline
+        arch:
+          - powerline-vim
   services:
     disable:
       - abrt

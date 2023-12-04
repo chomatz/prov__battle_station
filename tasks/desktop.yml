@@ -1,0 +1,83 @@
+---
+
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: enable epel related repositories
+      ansible.builtin.include_role:
+        name: repo__epel
+
+    - name: ensure tasks run only on selected os releases
+      block:
+
+        - name: enable vivaldi repository
+          ansible.builtin.yum_repository:
+            name: vivaldi
+            description: vivaldi web browser
+            baseurl: "https://repo.vivaldi.com/stable/rpm/x86_64"
+            enabled: true
+            gpgcheck: true
+            gpgkey: "https://repo.vivaldi.com/stable/linux_signing_key.pub"
+
+        - name: install vivaldi browser
+          ansible.builtin.package:
+            name: vivaldi-stable
+            state: latest
+
+        - name: install powerline packages
+          ansible.builtin.package:
+            name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.red_hat) }}"
+
+      when: >
+        ansible_distribution == "CentOS" or
+        ansible_distribution == "Fedora" or
+        ansible_distribution == "RedHat" or
+        ansible_distribution == "Rocky"
+
+    - name: install powerline packages
+      ansible.builtin.package:
+        name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.arch) }}"
+      when: ansible_distribution == "Archlinux"
+
+    - name: locate powerline-bash script
+      ansible.builtin.shell:
+        cmd: find / -name powerline.sh | grep -i bash
+      changed_when: false
+      register: cmd_bash_powerline
+
+    - ansible.builtin.debug:
+        var: cmd_bash_powerline
+        verbosity: 1
+
+    - name: configure powerline for bash
+      ansible.builtin.template:
+        src: templates/powerline-bash.sh
+        dest: /etc/profile.d/powerline-bash.sh
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: configure powerline for tmux
+      ansible.builtin.template:
+        src: templates/powerline-tmux.sh
+        dest: /etc/profile.d/powerline-tmux.sh
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: configure powerline for vim
+      ansible.builtin.template:
+        src: templates/powerline-vim.sh
+        dest: /etc/profile.d/powerline-vim.sh
+        owner: root
+        group: root
+        mode: "0644"
+
+  when: >
+    ansible_distribution == "Archlinux" or
+    ansible_distribution == "CentOS" or
+    ansible_distribution == "Fedora" or
+    ansible_distribution == "RedHat" or
+    ansible_distribution == "Rocky"
+
+...

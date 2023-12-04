@@ -37,6 +37,11 @@
             cmd: dnf config-manager --add-repo=https://negativo17.org/repos/fedora-spotify.repo
           when: ansible_distribution == "Fedora"
 
+        - name: install spotify
+          ansible.builtin.package:
+            name: spotify-client
+            state: latest
+
         - name: install powerline
           ansible.builtin.package:
             name: spotify-client

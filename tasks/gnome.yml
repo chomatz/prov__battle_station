@@ -3,12 +3,22 @@
 - name: ensure tasks run only on selected os releases
   block:
 
-    - name: install gnome desktop
-      ansible.builtin.package:
-        name:
-          - "@base-x"
-          - "@GNOME"
-        state: latest
+    - name: adding this block for idempotency as the '@GNOME' group seems to vanish upon installation
+      block:
+
+        - name: install gnome desktop
+          ansible.builtin.package:
+            name:
+              - "@base-x"
+              - "@GNOME"
+            state: latest
+
+      rescue:
+
+        - name: do not install '@GNOME'
+          ansible.builtin.package:
+            name: "@base-x"
+            state: latest
 
     - name: get the default systemd target
       ansible.builtin.command:

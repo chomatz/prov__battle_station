@@ -24,7 +24,24 @@
             name: vivaldi-stable
             state: latest
 
-        - name: install powerline packages
+        - name:  enable spotify repository
+          ansible.builtin.command:
+            cmd: dnf config-manager --add-repo=https://negativo17.org/repos/epel-spotify.repo
+          when: >
+            ansible_distribution == "CentOS" or
+            ansible_distribution == "RedHat" or
+            ansible_distribution == "Rocky"
+
+        - name: enable spotify repository
+          ansible.builtin.command:
+            cmd: dnf config-manager --add-repo=https://negativo17.org/repos/fedora-spotify.repo
+          when: ansible_distribution == "Fedora"
+
+        - name: install powerline
+          ansible.builtin.package:
+            name: spotify-client
+
+        - name: install powerline
           ansible.builtin.package:
             name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.red_hat) }}"
 
@@ -34,7 +51,7 @@
         ansible_distribution == "RedHat" or
         ansible_distribution == "Rocky"
 
-    - name: install powerline packages
+    - name: install powerline
       ansible.builtin.package:
         name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.arch) }}"
       when: ansible_distribution == "Archlinux"

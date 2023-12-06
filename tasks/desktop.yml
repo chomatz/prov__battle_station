@@ -3,10 +3,6 @@
 - name: ensure tasks run only on selected os releases
   block:
 
-    - name: enable epel related repositories
-      ansible.builtin.include_role:
-        name: repo__epel
-
     - name: ensure tasks run only on selected os releases
       block:
 
@@ -42,9 +38,9 @@
             name: spotify-client
             state: latest
 
-        - name: install powerline
-          ansible.builtin.package:
-            name: spotify-client
+        - name: enable epel repositories
+          ansible.builtin.include_role:
+            name: repo__epel
 
         - name: install powerline
           ansible.builtin.package:

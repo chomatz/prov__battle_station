@@ -1,11 +1,11 @@
 ---
 
 - name: ensure tasks run only on selected os releases
-  ansible.builtin.block:
+  block:
 
     - name: enable rpfusion repositories
       ansible.builtin.include_role:
-        name: repo__enable_rpmfusion
+        name: repo__rpm_fusion
 
     - name: install steam
       ansible.builtin.package:
@@ -13,7 +13,7 @@
         state: latest
 
     # xbox dongle driver for linux
-    - name: install xone driver
+    - name: install xone driver dependencies
       ansible.builtin.package:
         name:
           - cabextract
@@ -23,7 +23,6 @@
           - kernel
           - kernel-headers
         state: latest
-      when: install_xone
 
     - name: initialize xone local directory
       ansible.builtin.file:
@@ -36,7 +35,7 @@
         chdir: /opt
 
     - name: provide an error handler if the xone driver is already installed
-      ansible.builtin.block:
+      block:
 
         - name: install xone driver
           command:

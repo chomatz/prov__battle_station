@@ -1,0 +1,68 @@
+---
+
+- name: ensure tasks run only on selected os releases
+  ansible.builtin.block:
+
+    - name: enable rpfusion repositories
+      ansible.builtin.include_role:
+        name: repo__enable_rpmfusion
+
+    - name: install steam
+      ansible.builtin.package:
+        name: steam
+        state: latest
+
+    # xbox dongle driver for linux
+    - name: install xone driver
+      ansible.builtin.package:
+        name:
+          - cabextract
+          - curl
+          - dkms
+          - git-core
+          - kernel
+          - kernel-headers
+        state: latest
+      when: install_xone
+
+    - name: initialize xone local directory
+      ansible.builtin.file:
+        path: /opt/xone
+        state: absent
+
+    - name: clone xone repository
+      ansible.builtin.command:
+        cmd: git clone https://github.com/medusalix/xone
+        chdir: /opt
+
+    - name: provide an error handler if the xone driver is already installed
+      ansible.builtin.block:
+
+        - name: install xone driver
+          command:
+            cmd: ./install.sh --release
+            chdir: /opt/xone
+          register: cmd_xone_install
+
+      rescue:
+
+        - name: uninstall existing xone driver
+          command:
+            cmd: ./uninstall.sh
+            chdir: /opt/xone
+          when:
+            - cmd_xone_install is failed
+            - "'already installed' in cmd_xone_install.stderr"
+
+        - name: reinstall xone driver
+          command:
+            cmd: ./install.sh --release
+            chdir: /opt/xone
+
+    - name: download dongle firmware
+      command:
+        cmd: xone-get-firmware.sh --skip-disclaimer
+
+  when: ansible_distribution == "Fedora"
+
+...

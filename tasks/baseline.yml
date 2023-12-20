@@ -18,7 +18,7 @@
 
         - name: install system packages
           ansible.builtin.package:
-            name: "{{ linux_station.packages.base.install }}"
+            name: "{{ linux_station.packages.common.install | ansible.builtin.union(linux_station.packages.redhat.install) }}"
             state: present
 
         - name: enable the grub menu
@@ -98,6 +98,20 @@
         ansible_distribution == "RedHat" or
         ansible_distribution == "Rocky"
 
+    - name: ensure tasks run only on selected os releases
+      block:
+
+        - name: disable filesystem protection
+          ansible.builtin.command:
+            cmd: steamos-readonly disable
+
+        - name: install system packages
+          ansible.builtin.package:
+            name: "{{ linux_station.packages.common.install | ansible.builtin.union(linux_station.packages.arch.install) }}"
+            state: present
+
+      when: ansible_distribution == "Archlinux"
+
     - name: generate fancy hostname
       ansible.builtin.command:
         cmd: figlet -w 256 -f small "{{ inventory_hostname }}"
@@ -158,6 +172,12 @@
         owner: root
         group: root
         mode: "0644"
+
+    - name: disable filesystem protection
+      ansible.builtin.command:
+        cmd: steamos-readonly enable
+      when: ansible_distribution == "Archlinux"
+
 
   when: >
     ansible_distribution == "Archlinux" or

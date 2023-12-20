@@ -9,28 +9,33 @@ linux_station:
     source: |
       pool pool.ntp.org iburst
   packages:
-    base:
+    common:
       install:
         - bash-completion
-        - bind-utils
-        - chrony
-        - cockpit
         - ethtool
-        - firewalld
-        - grubby
         - lm_sensors
         - lsof
         - neofetch
         - net-tools
         - rsync
-        - sos
-        - sysstat
         - tar
-        - telnet
         - tmux
         - unzip
         - wget
         - which
+    base:
+      install:
+        - bind-utils
+        - chrony
+        - cockpit
+        - firewalld
+        - grubby
+        - sos
+        - sysstat
+        - telnet
+    arch:
+      install:
+        - bind
     battle:
       install:
         - steam

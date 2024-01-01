@@ -13,8 +13,6 @@ automates system provisioning from scratch
 
   tasks:
 
-    tasks:
-
     - name: deploy baseline configuration
       include_role:
         name: prov__battle_station

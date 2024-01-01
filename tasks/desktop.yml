@@ -55,7 +55,7 @@
     - name: ensure tasks run only on selected os releases
       block:
 
-        - name: disable filesystem protection
+        - name: disable steamos filesystem protection
           ansible.builtin.command:
             cmd: steamos-readonly disable
 
@@ -103,7 +103,7 @@
         group: root
         mode: "0644"
 
-    - name: disable filesystem protection
+    - name: enable steamos filesystem protection
       ansible.builtin.command:
         cmd: steamos-readonly enable
       when: ansible_distribution == "Archlinux"

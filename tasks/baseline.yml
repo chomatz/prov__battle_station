@@ -123,7 +123,9 @@
             name: "{{ linux_station.packages.common.install | ansible.builtin.union(linux_station.packages.arch.install) }}"
             state: present
 
-      when: ansible_distribution == "Archlinux"
+      when:
+        - ansible_distribution == "Archlinux"
+        - ansible_distribution_release == "holo"
 
     - name: generate fancy hostname
       ansible.builtin.command:
@@ -194,7 +196,7 @@
         readonly_mode: enable
 
   when: >
-    ansible_distribution == "Archlinux" or
+    (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
     ansible_distribution == "CentOS" or
     ansible_distribution == "Fedora" or
     ansible_distribution == "RedHat" or

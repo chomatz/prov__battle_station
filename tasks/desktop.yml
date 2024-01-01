@@ -71,7 +71,9 @@
           ansible.builtin.package:
             name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.arch) }}"
 
-      when: ansible_distribution == "Archlinux"
+      when:
+        - ansible_distribution == "Archlinux"
+        - ansible_distribution_release == "holo"
 
     - name: locate powerline-bash script
       ansible.builtin.shell:
@@ -113,10 +115,12 @@
         tasks_from: steamos_readonly.yml
       vars:
         readonly_mode: enable
-      when: ansible_distribution == "Archlinux"
+      when:
+        - ansible_distribution == "Archlinux"
+        - ansible_distribution_release == "holo"
 
   when: >
-    ansible_distribution == "Archlinux" or
+    (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
     ansible_distribution == "CentOS" or
     ansible_distribution == "Fedora" or
     ansible_distribution == "RedHat" or

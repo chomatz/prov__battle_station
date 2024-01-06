@@ -45,6 +45,7 @@ linux_station:
       install:
         - electrum
         - firefox
+        - "@LibreOffice"
         - vim
     powerline:
       install:

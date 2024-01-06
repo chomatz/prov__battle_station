@@ -41,20 +41,43 @@
         - name:  enable spotify repository
           ansible.builtin.command:
             cmd: dnf config-manager --add-repo=https://negativo17.org/repos/epel-spotify.repo
+          register: spotify_el_repo
+          ignore_errors: true
           when: >
             ansible_distribution == "CentOS" or
             ansible_distribution == "RedHat" or
             ansible_distribution == "Rocky"
 
+        - name: display epel spotify repo results
+          ansible.builtin.debug:
+            var: spotify_el_repo
+            verbosity: 1
+
         - name: enable spotify repository
           ansible.builtin.command:
             cmd: dnf config-manager --add-repo=https://negativo17.org/repos/fedora-spotify.repo
+          register: spotify_fedora_repo
+          ignore_errors: true
           when: ansible_distribution == "Fedora"
+
+        - name: display fedora spotify repo results
+          ansible.builtin.debug:
+            var: spotify_fedora_repo
+            verbosity: 1
 
         - name: install spotify
           ansible.builtin.package:
             name: spotify-client
             state: latest
+          register: spotify_package_install
+          when: >
+            ((spotify_el_repo.failed is defined) and (spotify_el_repo is not failed)) or
+            ((spotify_fedora_repo.failed is defined) and (spotify_fedora_repo is not failed))
+
+        - name: display spotify install results
+          ansible.builtin.debug:
+            var: spotify_package_install
+            verbosity: 1
 
         - name: enable epel repositories
           ansible.builtin.include_role:

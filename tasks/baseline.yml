@@ -18,7 +18,7 @@
 
         - name: install system packages
           ansible.builtin.package:
-            name: "{{ linux_station.packages.common.install | ansible.builtin.union(linux_station.packages.redhat.install) }}"
+            name: "{{ linux_station.packages.common.install | ansible.builtin.union(linux_station.packages.base.install) }}"
             state: present
 
         - name: enable the grub menu

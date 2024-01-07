@@ -18,6 +18,7 @@
       ansible.builtin.user:
         name: steam
         home: /home/steam
+        system: true
         groups: games,audio
 
     - name: ensure /home/steam is owned by steam in case it is a mountpoint

@@ -38,7 +38,7 @@
       block:
 
         - name: install xone driver
-          command:
+          ansible.builtin.command:
             cmd: ./install.sh --release
             chdir: /opt/xone
           register: cmd_xone_install
@@ -46,7 +46,7 @@
       rescue:
 
         - name: uninstall existing xone driver
-          command:
+          ansible.builtin.command:
             cmd: ./uninstall.sh
             chdir: /opt/xone
           when:
@@ -54,12 +54,12 @@
             - "'already installed' in cmd_xone_install.stderr"
 
         - name: reinstall xone driver
-          command:
+          ansible.builtin.command:
             cmd: ./install.sh --release
             chdir: /opt/xone
 
     - name: download dongle firmware
-      command:
+      ansible.builtin.command:
         cmd: xone-get-firmware.sh --skip-disclaimer
 
   when: ansible_distribution == "Fedora"

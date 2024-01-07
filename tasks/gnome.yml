@@ -12,6 +12,7 @@
               - "@base-x"
               - dconf-editor
               - "@GNOME"
+              - gnome-themes-extra
               - gnome-tweaks
             state: latest
 
@@ -22,6 +23,7 @@
             name:
               - "@base-x"
               - dconf-editor
+              - gnome-themes-extra
               - gnome-tweaks
             state: latest
 

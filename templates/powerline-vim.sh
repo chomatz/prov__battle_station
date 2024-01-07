@@ -1,5 +1,5 @@
-if [ ! -f ~/.vimrc ]; then
-	out_file=~/.vimrc
+out_file=~/.vimrc
+if [ ! -f "$out_file" ]; then
 	cat /dev/null > "$out_file"
 	echo "set laststatus=2" >> "$out_file"
 	echo "set showtabline=2" >> "$out_file"
@@ -7,3 +7,4 @@ if [ ! -f ~/.vimrc ]; then
 	echo "set t_Co=256" >> "$out_file"
 	echo "set mouse-=a" >> "$out_file"
 fi
+alias vi='vim'

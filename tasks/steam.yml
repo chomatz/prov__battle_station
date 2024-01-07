@@ -9,8 +9,16 @@
 
     - name: install steam
       ansible.builtin.package:
-        name: steam
+        name:
+          - steam
+          - dbus-x11
         state: latest
+
+    - name: create steam user
+      ansible.builtin.user:
+        name: steam
+        home: /home/steam
+        groups: games,audio
 
     # xbox dongle driver for linux
     - name: install xone driver dependencies
@@ -61,6 +69,63 @@
     - name: download dongle firmware
       ansible.builtin.command:
         cmd: xone-get-firmware.sh --skip-disclaimer
+
+    - name: below are some hacky procedures for pipewire audio sharing accross multiple users
+      ansible.builtin.debug:
+        msg: users that will share the pipewire-pulse socket must be members of the audio group
+      delegate_to: localhost
+      run_once: true
+
+    - name: remove default pipewire-pulse socket
+      ansible.builtin.lineinfile:
+        path: /usr/lib/systemd/user/pipewire-pulse.socket
+        regexp: '^.*ListenStream=%t/pulse/native'
+        state: absent
+
+    - name: create custom pipewire-pulse socket
+      ansible.builtin.blockinfile:
+        path: /usr/lib/systemd/user/pipewire-pulse.socket
+        marker: "##### {mark} custom pipewire-pulse socket #####"
+        insertafter: "\\[Socket\\]"
+        block: |
+          ExecStartPre=rm -f /tmp/pulse-socket
+          ExecStopPost=rm -f /tmp/pulse-socket
+          ListenStream=/tmp/pulse-socket
+          SocketGroup=audio
+          SocketMode=0660
+
+    - name: create global pipewire config directory
+      ansible.builtin.file:
+        path: /etc/pipewire
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: create default pipewire-pulse configuration
+      ansible.builtin.command:
+        cmd: cp /usr/share/pipewire/pipewire-pulse.conf /etc/pipewire/.
+
+    - name: update socket in pipewire-pulse configuration
+      ansible.builtin.command:
+        cmd: sed -i -e 's|#"unix:/tmp/something"|"unix:/tmp/pulse-socket"|' /etc/pipewire/pipewire-pulse.conf
+
+    - name: set PULSE_SERVER environment variable
+      ansible.builtin.copy:
+        dest: /etc/profile.d/pipewire-pulse.sh
+        content: "export PULSE_SERVER=/tmp/pulse-socket"
+
+    - name: create sudoers file to run steam
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/steam
+        content: "%games ALL=(steam) NOPASSWD:SETENV: /usr/bin/steam"
+
+    - name: how to run steam as a different user
+      ansible.builtin.debug:
+        msg: |
+          1. sudo usermod -aG games,audio <your_user_name>
+          2. you may need to login again for the first item to take effect
+          3. xhost +; sudo -u steam PULSE_SERVER=/tmp/pulse-socket XDG_RUNTIME_DIR=/tmp/steam steam
 
   when: ansible_distribution == "Fedora"
 

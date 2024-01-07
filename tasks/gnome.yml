@@ -10,14 +10,19 @@
           ansible.builtin.package:
             name:
               - "@base-x"
+              - dconf-editor
               - "@GNOME"
+              - gnome-tweaks
             state: latest
 
       rescue:
 
         - name: do not install '@GNOME'
           ansible.builtin.package:
-            name: "@base-x"
+            name:
+              - "@base-x"
+              - dconf-editor
+              - gnome-tweaks
             state: latest
 
     - name: get the default systemd target

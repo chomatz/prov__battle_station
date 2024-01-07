@@ -20,6 +20,13 @@
         home: /home/steam
         groups: games,audio
 
+    - name: ensure /home/steam is owned by steam in case it is a mountpoint
+      ansible.builtin.file:
+        path: /home/steam
+        recurse: true
+        owner: steam
+        group: steam
+
     # xbox dongle driver for linux
     - name: install xone driver dependencies
       ansible.builtin.package:

@@ -9,24 +9,22 @@
 
     - name: install steam
       ansible.builtin.package:
-        name:
-          - steam
-          - dbus-x11
+        name: "{{ linux_station.packages.steam.install }}"
         state: latest
 
-    - name: create steam user
+    - name: "create {{ linux_station.steam.user }} user"
       ansible.builtin.user:
-        name: steam
-        home: /home/steam
+        name: "{{ linux_station.steam.user }}"
+        home: "/home/{{ linux_station.steam.user }}"
         system: true
         groups: games,audio
 
-    - name: ensure /home/steam is owned by steam in case it is a mountpoint
+    - name: "ensure /home/{{ linux_station.steam.user }} is owned by {{ linux_station.steam.user }} in case it is a mountpoint"
       ansible.builtin.file:
-        path: /home/steam
+        path: "/home/{{ linux_station.steam.user }}"
         recurse: true
-        owner: steam
-        group: steam
+        owner: "{{ linux_station.steam.user }}"
+        group: "{{ linux_station.steam.user }}"
 
     # xbox dongle driver for linux
     - name: install xone driver dependencies
@@ -126,14 +124,14 @@
     - name: create sudoers file to run steam
       ansible.builtin.copy:
         dest: /etc/sudoers.d/steam
-        content: "%games ALL=(steam) NOPASSWD:SETENV: /usr/bin/steam"
+        content: "%games ALL=({{ linux_station.steam.user }}) NOPASSWD:SETENV: /usr/bin/steam"
 
     - name: how to run steam as a different user
       ansible.builtin.debug:
         msg: |
           1. sudo usermod -aG games,audio <your_user_name>
           2. you may need to login again for the first item to take effect
-          3. xhost +; sudo -u steam PULSE_SERVER=/tmp/pulse-socket XDG_RUNTIME_DIR=/tmp/steam steam
+          3. xhost +; sudo -u {{ linux_station.steam.user }} PULSE_SERVER=/tmp/pulse-socket XDG_RUNTIME_DIR=/tmp/steam steam
 
   when: ansible_distribution == "Fedora"
 

@@ -71,6 +71,10 @@ linux_station:
         - gnome-extensions-app
         - gnome-themes-extra
         - gnome-tweaks
+    steam:
+      install:
+        - steam
+        - dbus-x11
   services:
     disable:
       - abrt
@@ -107,5 +111,7 @@ linux_station:
   ssh:
     ping_interval: 60
     max_timeouts: 2
+  steam:
+    user: steam
 
 ...

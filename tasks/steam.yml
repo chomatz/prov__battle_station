@@ -131,7 +131,7 @@
         msg: |
           1. sudo usermod -aG games,audio <your_user_name>
           2. you may need to login again for the first item to take effect
-          3. xhost +; sudo -u {{ linux_station.steam.user }} PULSE_SERVER=/tmp/pulse-socket XDG_RUNTIME_DIR=/tmp/steam steam
+          3. xhost +; sudo -u {{ linux_station.steam.user }} PULSE_SERVER=/tmp/pulse-socket XDG_RUNTIME_DIR=/tmp/{{ linux_station.steam.user }} steam
 
   when: ansible_distribution == "Fedora"
 

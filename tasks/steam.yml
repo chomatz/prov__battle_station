@@ -121,7 +121,7 @@
         dest: /etc/profile.d/pipewire-pulse.sh
         content: "export PULSE_SERVER=/tmp/pulse-socket"
 
-    - name: create sudoers file to run steam
+    - name: create sudoers file for running steam
       ansible.builtin.copy:
         dest: /etc/sudoers.d/steam
         content: "%games ALL=({{ linux_station.steam.user }}) NOPASSWD:SETENV: /usr/bin/steam"

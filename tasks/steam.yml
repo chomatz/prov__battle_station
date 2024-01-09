@@ -126,6 +126,22 @@
         dest: /etc/sudoers.d/steam
         content: "%games ALL=({{ linux_station.steam.user }}) NOPASSWD:SETENV: /usr/bin/steam"
 
+    - name: create system-wide executable script
+      ansible.builtin.template:
+        src: templates/steam_sudo
+        dest: /usr/bin/steam_sudo
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: create graphical application launcher
+      ansible.builtin.template:
+        src: templates/steam_sudo.desktop
+        dest: /usr/share/applications/steam_sudo.desktop
+        owner: root
+        group: root
+        mode: "0644"
+
     - name: how to run steam as a different user
       ansible.builtin.debug:
         msg: |

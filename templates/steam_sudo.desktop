@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Steam via sudo
+Comment=Run steam using the {{ linux_station.steam.user }} user
+Exec=/usr/bin/steam_sudo
+Icon=steam
+Terminal=false
+Type=Application
+Categories=Network;FileTransfer;Game;
+PrefersNonDefaultGPU=true
+X-KDE-RunOnDiscreteGpu=true

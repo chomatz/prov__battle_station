@@ -64,6 +64,13 @@ linux_station:
         - qemu-kvm
         - virt-install
         - virt-manager
+    gnome:
+      install:
+        - "@base-x"
+        - dconf-editor
+        - gnome-extensions-app
+        - gnome-themes-extra
+        - gnome-tweaks
   services:
     disable:
       - abrt

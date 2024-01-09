@@ -9,24 +9,15 @@
         - name: install gnome desktop
           ansible.builtin.package:
             name:
-              - "@base-x"
-              - dconf-editor
               - "@GNOME"
-              - gnome-extensions-app
-              - gnome-themes-extra
-              - gnome-tweaks
+              - "{{ linux_station.packages.gnome.install }}"
             state: latest
 
       rescue:
 
         - name: do not install '@GNOME'
           ansible.builtin.package:
-            name:
-              - "@base-x"
-              - dconf-editor
-              - gnome-extensions-app
-              - gnome-themes-extra
-              - gnome-tweaks
+            name: "{{ linux_station.packages.gnome.install }}"
             state: latest
 
     - name: get the default systemd target

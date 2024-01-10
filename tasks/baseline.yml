@@ -70,27 +70,51 @@
             state: present
             line: "{{ cmd_neofetch_binary.stdout }}"
 
-        - name: disable selected services
-          ansible.builtin.service:
-            name: "{{ item }}"
-            state: stopped
-            enabled: false
+#        - name: disable selected services
+#          ansible.builtin.service:
+#            name: "{{ item }}"
+#            state: stopped
+#            enabled: false
+#          register: service_disabled
+#          failed_when:
+#            - service_disabled is failed
+#            - "'Could not find the requested service' not in service_disabled.msg"
+#          with_items: "{{ linux_station.services.disable }}"
+
+        - name: disable services
+          ansible.builtin.command:
+            cmd: "systemctl disable --now {{ linux_station.services.disable | join(' ') }}"
           register: service_disabled
           failed_when:
             - service_disabled is failed
-            - "'Could not find the requested service' not in service_disabled.msg"
-          with_items: "{{ linux_station.services.disable }}"
+            - "'does not exist' not in service_disabled.stderr"
 
-        - name: enable selected services
-          ansible.builtin.service:
-            name: "{{ item }}"
-            state: started
-            enabled: true
+        - ansible.builtin.debug:
+            var: service_disabled
+            verbosity: 0
+
+#        - name: enable selected services
+#          ansible.builtin.service:
+#            name: "{{ item }}"
+#            state: started
+#            enabled: true
+#          register: service_enabled
+#          failed_when:
+#            - service_enabled is failed
+#            - "'Could not find the requested service' not in service_enabled.msg"
+#          with_items: "{{ linux_station.services.enable }}"
+
+        - name: enable services
+          ansible.builtin.command:
+            cmd: "systemctl enable --now {{ linux_station.services.enable | join(' ') }}"
           register: service_enabled
           failed_when:
             - service_enabled is failed
-            - "'Could not find the requested service' not in service_enabled.msg"
-          with_items: "{{ linux_station.services.enable }}"
+            - "'does not exist' not in service_enabled.stderr"
+
+        - ansible.builtin.debug:
+            var: service_enabled
+            verbosity: 0
 
       when: >
         ansible_distribution == "CentOS" or

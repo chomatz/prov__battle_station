@@ -8,9 +8,7 @@
 
         - name: install gnome desktop
           ansible.builtin.package:
-            name:
-              - "@GNOME"
-              - "{{ linux_station.packages.gnome.install }}"
+            name: "{{ linux_station.packages.gnome.install + ['@GNOME'] }}"
             state: latest
 
       rescue:

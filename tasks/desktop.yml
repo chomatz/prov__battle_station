@@ -87,6 +87,10 @@
           ansible.builtin.package:
             name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.red_hat) }}"
 
+        - name: install desktop software
+          ansible.builtin.package:
+            name: "{{ linux_station.packages.desktop.install }}"
+
       when: >
         ansible_distribution == "CentOS" or
         ansible_distribution == "Fedora" or

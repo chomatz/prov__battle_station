@@ -69,12 +69,12 @@
         - name: display ipv4 alias
           ansible.builtin.debug:
             var: ansible_default_ipv4.alias
-            verbosity: 0
+            verbosity: 1
 
         - name: display ipv4 method
           ansible.builtin.debug:
             var: ipv4_method.stdout
-            verbosity: 0
+            verbosity: 1
 
         - name: auto ivp4 configuration
           block:

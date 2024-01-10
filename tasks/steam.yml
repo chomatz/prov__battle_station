@@ -19,10 +19,10 @@
         system: true
         groups: games,audio
 
-    - name: create some error handling in case we reach the recursion depth limit
+    - name: fall back to using cli commands if the recursion depth limit is reached
       block:
 
-        - name: "ensure /home/{{ linux_station.steam.user }} is owned by {{ linux_station.steam.user }} in case it is a mountpoint"
+        - name: "ensure /home/{{ linux_station.steam.user }} is owned by {{ linux_station.steam.user }}"
           ansible.builtin.file:
             path: "/home/{{ linux_station.steam.user }}"
             recurse: true

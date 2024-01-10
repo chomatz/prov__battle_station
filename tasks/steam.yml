@@ -19,12 +19,21 @@
         system: true
         groups: games,audio
 
-    - name: "ensure /home/{{ linux_station.steam.user }} is owned by {{ linux_station.steam.user }} in case it is a mountpoint"
-      ansible.builtin.file:
-        path: "/home/{{ linux_station.steam.user }}"
-        recurse: true
-        owner: "{{ linux_station.steam.user }}"
-        group: "{{ linux_station.steam.user }}"
+    - name: create some error handling in case we reach the recursion depth limit
+      block:
+
+        - name: "ensure /home/{{ linux_station.steam.user }} is owned by {{ linux_station.steam.user }} in case it is a mountpoint"
+          ansible.builtin.file:
+            path: "/home/{{ linux_station.steam.user }}"
+            recurse: true
+            owner: "{{ linux_station.steam.user }}"
+            group: "{{ linux_station.steam.user }}"
+
+      rescue:
+
+        - name: "ensure /home/{{ linux_station.steam.user }} is owned by {{ linux_station.steam.user }} via chown"
+          ansible.builtin.command:
+            cmd: "/usr/bin/chown -R {{ linux_station.steam.user }}:{{ linux_station.steam.user }} /home/{{ linux_station.steam.user }}"
 
     # xbox dongle driver for linux
     - name: install xone driver dependencies

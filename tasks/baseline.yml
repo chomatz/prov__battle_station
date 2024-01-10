@@ -89,9 +89,10 @@
             - service_disabled is failed
             - "'does not exist' not in service_disabled.stderr"
 
-        - ansible.builtin.debug:
+        - name: display disabled services
+          ansible.builtin.debug:
             var: service_disabled
-            verbosity: 0
+            verbosity: 1
 
 #        - name: enable selected services
 #          ansible.builtin.service:
@@ -112,9 +113,10 @@
             - service_enabled is failed
             - "'does not exist' not in service_enabled.stderr"
 
-        - ansible.builtin.debug:
+        - name: display enabled services
+          ansible.builtin.debug:
             var: service_enabled
-            verbosity: 0
+            verbosity: 1
 
       when: >
         ansible_distribution == "CentOS" or

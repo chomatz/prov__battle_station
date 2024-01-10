@@ -19,7 +19,7 @@
         system: true
         groups: games,audio
 
-    - name: fall back to using cli commands if the recursion depth limit is reached
+    - name: fall back to using chown if the recursion depth limit is reached
       block:
 
         - name: "ensure /home/{{ linux_station.steam.user }} is owned by {{ linux_station.steam.user }}"

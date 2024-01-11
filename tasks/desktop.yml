@@ -83,13 +83,82 @@
           ansible.builtin.include_role:
             name: repo__epel
 
-        - name: install powerline
-          ansible.builtin.package:
-            name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.red_hat) }}"
+        - name: configure anydesk repository on red hat or enterprise linux clones
+          block:
+
+           - name: set source to rhel
+             ansible.builtin.set_fact:
+               os_shortname: rhel
+
+           - name: upload anydesk repository
+             ansible.builtin.template:
+               src: templates/anydesk.repo
+               dest: "/etc/yum.repos.d/{{ ansible_distribution | lower }}-anydesk.repo"
+               owner: root
+               group: root
+               mode: "0644"
+
+          when: >
+            ansible_distribution == "Fedora" or
+            ansible_distribution == "RedHat" or
+            ansible_distribution == "Rocky"
+
+        - name: configure anydesk repository on centos or fedora
+          block:
+
+           - name: set source to ansible_distribution value
+             ansible.builtin.set_fact:
+               os_shortname: "{{ ansible_distribution }}"
+
+           - name: upload anydesk repository
+             ansible.builtin.template:
+               src: templates/anydesk.repo
+               dest: "/etc/yum.repos.d/{{ ansible_distribution | lower }}-anydesk.repo"
+               owner: root
+               group: root
+               mode: "0644"
+
+          when: ansible_distribution == "CentOS"
+
+        - name: "provide error handling for anydesk's obsolete dependencies"
+          block:
+
+            - name: install anydesk
+              ansible.builtin.package:
+                name: anydesk
+                state: latest
+              register: anydesk_install
+
+          rescue:
+
+            - name: display anydesk install status
+              ansible.builtin.debug:
+                var: anydesk_install
+                verbosity: 0
+
+            #- name: install obsolete dependencies
+            #  ansible.builtin.dnf:
+            #    name: pangox-compat
+            #    releasever: 32
+            #  when:
+            #    - anydesk_install is failed
+            #    - "'nothing provides libgtkglext-x11-1_0-0' in anydesk_install.msg"
+            #    - ansible_distribution == "Fedora"
+
+            - name: install anydesk
+              ansible.builtin.package:
+                name: anydesk
+                state: latest
 
         - name: install desktop software
           ansible.builtin.package:
             name: "{{ linux_station.packages.desktop.install }}"
+            state: latest
+
+        - name: install powerline
+          ansible.builtin.package:
+            name: "{{ linux_station.packages.powerline.install.base | ansible.builtin.union(linux_station.packages.powerline.install.red_hat) }}"
+            state: latest
 
       when: >
         ansible_distribution == "CentOS" or

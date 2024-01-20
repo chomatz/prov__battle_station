@@ -8,8 +8,6 @@ linux_station:
     # peer full.server.fqdn
     source: |
       pool pool.ntp.org iburst
-  kvm:
-    bridge: kvmbr0
   packages:
     common:
       install:
@@ -57,13 +55,6 @@ linux_station:
           - vim-powerline
         arch:
           - powerline-vim
-    kvm:
-      install:
-        - bridge-utils
-        - libvirt
-        - qemu-kvm
-        - virt-install
-        - virt-manager
     gnome:
       install:
         - "@base-x"

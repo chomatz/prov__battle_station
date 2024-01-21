@@ -6,24 +6,6 @@
     - name: ensure tasks run only on selected os releases
       block:
 
-        - name: remove default GRUB_TERMINAL_OUTPUT
-          ansible.builtin.lineinfile:
-            path: /etc/default/grub
-            regexp: '^.*GRUB_TERMINAL_OUTPUT="'
-            state: absent
-
-        - name: apply grub customizations
-          ansible.builtin.blockinfile:
-            path: /etc/default/grub
-            marker: "##### {mark} grub customizations #####"
-            block: |
-              GRUB_TERMINAL_OUTPUT=gfxterm
-              GRUB_GFXMODE={{ max_resolution }}
-
-        - name: rebuild grub configuration
-          ansible.builtin.command:
-            cmd: "grub2-mkconfig -o /boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg"
-
         - name: enable vivaldi repository
           ansible.builtin.yum_repository:
             name: vivaldi

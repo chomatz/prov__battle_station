@@ -55,13 +55,6 @@ linux_station:
           - vim-powerline
         arch:
           - powerline-vim
-    gnome:
-      install:
-        - "@base-x"
-        - dconf-editor
-        - gnome-extensions-app
-        - gnome-themes-extra
-        - gnome-tweaks
   services:
     disable:
       - abrt

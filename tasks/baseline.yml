@@ -49,14 +49,9 @@
           ansible.builtin.include_role:
             name: prov__cockpit
 
-        - name: set chrony time sources
-          ansible.builtin.template:
-            src: templates/chrony.conf
-            dest: /etc/chrony.conf
-            owner: root
-            group: root
-            mode: '0644'
-          notify: restart and enable chronyd
+        - name: deploy chrony
+          ansible.builtin.include_role:
+            name: prov__chrony
 
         - name: locate neofetch binary
           ansible.builtin.command:

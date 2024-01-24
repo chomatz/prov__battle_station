@@ -26,7 +26,6 @@ linux_station:
     base:
       install:
         - bind-utils
-        - chrony
         - firewalld
         - grubby
         - sos

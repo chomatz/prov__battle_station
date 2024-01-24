@@ -45,12 +45,9 @@
               - quiet
               - rhgb
 
-        - name: disable root access on cockpit
-          ansible.builtin.lineinfile:
-            path: /etc/pam.d/cockpit
-            line: auth requisite pam_succeed_if.so uid >= 1000
-            insertafter: "#%PAM-1.0"
-          notify: restart and enable cockpit
+        - name: deploy cockpit
+          ansible.builtin.include_role:
+            name: prov__cockpit
 
         - name: set chrony time sources
           ansible.builtin.template:

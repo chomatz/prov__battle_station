@@ -27,7 +27,6 @@ linux_station:
       install:
         - bind-utils
         - chrony
-        - cockpit
         - firewalld
         - grubby
         - sos

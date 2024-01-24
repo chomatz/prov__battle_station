@@ -22,24 +22,28 @@
             state: present
 
         - name: enable the grub menu
-          ansible.builtin.command:
-            cmd: grub2-editenv - unset menu_auto_hide
-          register: cmd_grub_menu
-          failed_when:
-            - cmd_grub_menu is failed
-            - "'No such file or directory' not in cmd_grub_menu.msg"
+          ansible.builtin.include_role:
+            name: mgmt__grub
+            tasks_from: grub_settings.yml
+          vars:
+            grub_setting:
+              - key: GRUB_HIDDEN_TIMEOUT
+                value: 0
+              - key: GRUB_TIMEOUT_STYLE
+                value: menu
+              - key: GRUB_TIMEOUT
+                value: 5
 
-        - name: remove kernel args
-          ansible.builtin.command:
-            cmd: "grubby --remove-args='{{ item }}' --update-kernel=ALL"
-          with_items:
-            - crashkernel
-            - quiet
-            - rhgb
-          register: cmd_verbose_boot
-          failed_when:
-            - cmd_verbose_boot is failed
-            - "'No such file or directory' not in cmd_verbose_boot.msg"
+        - name: remove default kernel arguments
+          ansible.builtin.include_role:
+            name: mgmt__grub
+            tasks_from: grubby.yml
+          vars:
+            grubby_task: remove
+            kernel_arguments:
+              - crashkernel
+              - quiet
+              - rhgb
 
         - name: disable root access on cockpit
           ansible.builtin.lineinfile:

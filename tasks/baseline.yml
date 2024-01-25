@@ -84,6 +84,7 @@
           failed_when:
             - service_disabled is failed
             - "'does not exist' not in service_disabled.stderr"
+            - "'not loaded' not in service_disabled.stderr"
 
         - name: display disabled services
           ansible.builtin.debug:

@@ -65,7 +65,7 @@
           ansible.builtin.include_role:
             name: repo__epel
 
-        - name: configure anydesk repository on red hat or enterprise linux clones
+        - name: configure anydesk repository - fedora and rhel derivatives
           block:
 
            - name: set source to rhel
@@ -85,7 +85,7 @@
             ansible_distribution == "RedHat" or
             ansible_distribution == "Rocky"
 
-        - name: configure anydesk repository on centos or fedora
+        - name: configure anydesk repository - centos
           block:
 
            - name: set source to ansible_distribution value
@@ -102,55 +102,16 @@
 
           when: ansible_distribution == "CentOS"
 
-        - name: "provide error handling for anydesk's obsolete dependencies"
-          block:
-
-            - name: install anydesk
-              ansible.builtin.package:
-                name: anydesk
-                state: latest
-              register: anydesk_install
-
-          rescue:
-
-            - name: display anydesk install status
-              ansible.builtin.debug:
-                var: anydesk_install
-                verbosity: 0
-
-            #- name: install obsolete dependencies
-            #  ansible.builtin.dnf:
-            #    name: pangox-compat
-            #    releasever: 32
-            #  when:
-            #    - anydesk_install is failed
-            #    - "'nothing provides libgtkglext-x11-1_0-0' in anydesk_install.msg"
-            #    - ansible_distribution == "Fedora"
-
-            - name: install anydesk
-              ansible.builtin.package:
-                name: anydesk
-                state: latest
+        - name: install anydesk
+          ansible.builtin.package:
+            name: anydesk
+            state: present
+          register: anydesk_install
 
         - name: install viber
-          block:
-
-            - name: install viber directly
-              ansible.builtin.package:
-                name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
-                state: latest
-
-          rescue:
-
-            - name: download viber rpm
-              ansible.builtin.command:
-                cmd: wget -O /tmp/viber.rpm https://download.cdn.viber.com/desktop/Linux/viber.rpm
-
-            - name: install downloaded viber rpm
-              ansible.builtin.dnf:
-                name: /tmp/viber.rpm
-                state: latest
-                disable_gpg_check: true
+          ansible.builtin.package:
+            name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
+            state: latest
 
         - name: install desktop software
           ansible.builtin.package:

@@ -42,7 +42,6 @@ linux_station:
         - electrum
         - firefox
         - "@LibreOffice"
-        - vim
     powerline:
       install:
         base:

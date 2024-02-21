@@ -152,6 +152,10 @@
         - ansible_distribution == "Archlinux"
         - ansible_distribution_release == "holo"
 
+    - name: install vim
+      ansible.builtin.include_role:
+        name: prov__vim
+
     - name: locate powerline-bash script
       ansible.builtin.shell:
         cmd: find / -name powerline.sh | grep -i bash

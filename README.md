@@ -1,4 +1,4 @@
-# prov__battlestation
+# prov__battle_station
 automates system provisioning from scratch
 
 # requirements

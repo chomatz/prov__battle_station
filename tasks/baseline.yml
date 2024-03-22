@@ -152,7 +152,13 @@
 
     - name: set hostname
       ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+      when: hostname_format == "fqdn"
+
+    - name: set hostname
+      ansible.builtin.hostname:
         name: "{{ inventory_hostname_short }}"
+      when: hostname_format == "host"
 
     - name: generate fancy hostname
       ansible.builtin.command:

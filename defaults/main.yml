@@ -1,2 +1,7 @@
 ---
-# defaults file for prov__battlestation
+
+# fqdn = full hostname (host.example.domain)
+# host = host part (host)
+hostname_format: fqdn
+
+...

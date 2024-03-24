@@ -17,10 +17,12 @@ linux_station:
         - lsof
         - neofetch
         - net-tools
+        - pciutils
         - rsync
         - tar
         - tmux
         - unzip
+        - usbutils
         - wget
         - which
     base:

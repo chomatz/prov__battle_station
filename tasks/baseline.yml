@@ -172,7 +172,7 @@
     - name: display figlet location
       ansible.builtin.debug:
         var: cmd_figlet_location
-        verbosity: 0
+        verbosity: 1
 
     - name: generate fancy hostname
       ansible.builtin.command:

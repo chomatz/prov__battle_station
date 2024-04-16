@@ -160,12 +160,17 @@
         name: "{{ inventory_hostname_short }}"
       when: hostname_format == "host"
 
-    - name: install figlet
-      ansible.builtin.package:
-        name: figlet
-        state: present
-      delegate_to: localhost
-      run_once: true
+    - name: locate figlet
+      ansible.builtin.command:
+        cmd: which figlet
+      changed_when: false
+      ignore_errors: true
+      register: cmd_figlet_location
+
+    - name: display figlet location
+      ansible.builtin.debug:
+        var: cmd_figlet_location
+        verbosity: 0
 
     - name: generate fancy hostname
       ansible.builtin.command:
@@ -173,6 +178,13 @@
       changed_when: false
       register: cmd_figlet_hostname
       delegate_to: localhost
+      when: cmd_figlet_location is not failed
+
+    - name: generate standard hostname
+      ansible.builtin.set_fact:
+        cmd_figlet_hostname:
+          stdout: "{{ inventory_hostname }}"
+      when: cmd_figlet_location is failed
 
     - name: check if /etc/motd.d exists
       ansible.builtin.stat:

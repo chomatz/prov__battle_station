@@ -173,7 +173,7 @@
     - name: display figlet result
       ansible.builtin.debug:
         var: cmd_figlet_hostname
-        verbosity: 0
+        verbosity: 1
 
     - name: generate standard hostname
       ansible.builtin.set_fact:

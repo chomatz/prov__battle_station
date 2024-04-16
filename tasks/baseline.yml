@@ -168,11 +168,15 @@
         - cmd_figlet_location is failed
         - "'no figlet in' not in cmd_figlet_location.stderr"
       register: cmd_figlet_location
+      delegate_to: localhost
+      run_once: true
 
     - name: display figlet location
       ansible.builtin.debug:
         var: cmd_figlet_location
         verbosity: 1
+      delegate_to: localhost
+      run_once: true
 
     - name: generate fancy hostname
       ansible.builtin.command:
@@ -186,6 +190,7 @@
       ansible.builtin.set_fact:
         cmd_figlet_hostname:
           stdout: "{{ inventory_hostname }}"
+      delegate_to: localhost
       when: cmd_figlet_location.stdout == ""
 
     - name: check if /etc/motd.d exists

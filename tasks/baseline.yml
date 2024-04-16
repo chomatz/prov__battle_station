@@ -164,7 +164,9 @@
       ansible.builtin.command:
         cmd: which figlet
       changed_when: false
-      ignore_errors: true
+      failed_when:
+        - cmd_figlet_location is failed
+        - "'no figlet in' not in cmd_figlet_location.stderr"
       register: cmd_figlet_location
 
     - name: display figlet location
@@ -178,13 +180,13 @@
       changed_when: false
       register: cmd_figlet_hostname
       delegate_to: localhost
-      when: cmd_figlet_location is not failed
+      when: cmd_figlet_location.stdout != ""
 
     - name: generate standard hostname
       ansible.builtin.set_fact:
         cmd_figlet_hostname:
           stdout: "{{ inventory_hostname }}"
-      when: cmd_figlet_location is failed
+      when: cmd_figlet_location.stdout == ""
 
     - name: check if /etc/motd.d exists
       ansible.builtin.stat:

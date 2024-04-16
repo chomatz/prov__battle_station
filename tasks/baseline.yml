@@ -160,6 +160,13 @@
         name: "{{ inventory_hostname_short }}"
       when: hostname_format == "host"
 
+    - name: install figlet
+      ansible.builtin.package:
+        name: figlet
+        state: present
+      delegate_to: localhost
+      run_once: true
+
     - name: generate fancy hostname
       ansible.builtin.command:
         cmd: figlet -w 256 -f small "{{ inventory_hostname }}"

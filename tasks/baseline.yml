@@ -180,7 +180,7 @@
         cmd_figlet_hostname:
           stdout: "{{ inventory_hostname }}"
       delegate_to: localhost
-      when: cmd_figlet_location.stdout == ""
+      when: cmd_figlet_hostname.stdout == ""
 
     - name: check if /etc/motd.d exists
       ansible.builtin.stat:

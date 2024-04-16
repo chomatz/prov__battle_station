@@ -164,8 +164,16 @@
       ansible.builtin.command:
         cmd: figlet -w 256 -f small "{{ inventory_hostname }}"
       changed_when: false
+      failed_when:
+        - cmd_figlet_hostname is failed
+        - "'No such file or directory' not in cmd_figlet_hostname.msg"
       register: cmd_figlet_hostname
       delegate_to: localhost
+
+    - name: display figlet result
+      ansible.builtin.debug:
+        var: cmd_figlet_hostname
+        verbosity: 0
 
     - name: generate standard hostname
       ansible.builtin.set_fact:

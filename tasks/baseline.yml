@@ -53,18 +53,18 @@
           ansible.builtin.include_role:
             name: prov__chrony
 
-        - name: locate neofetch binary
+        - name: locate fastfetch binary
           ansible.builtin.command:
-            cmd: which neofetch
+            cmd: which fastfetch
           changed_when: false
-          register: cmd_neofetch_binary
+          register: cmd_fastfetch_binary
 
-        - name: configure neofetch to run on user login
+        - name: configure fastfetch to run on user login
           ansible.builtin.lineinfile:
-            path: /etc/profile.d/neofetch.sh
+            path: /etc/profile.d/fastfetch.sh
             create: true
             state: present
-            line: "{{ cmd_neofetch_binary.stdout }}"
+            line: "{{ cmd_fastfetch_binary.stdout }}"
 
 #        - name: disable selected services
 #          ansible.builtin.service:

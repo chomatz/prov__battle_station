@@ -15,7 +15,7 @@ linux_station:
         - ethtool
         - lm_sensors
         - lsof
-        - neofetch
+        - fastfetch
         - net-tools
         - pciutils
         - rsync

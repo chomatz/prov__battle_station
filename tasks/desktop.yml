@@ -109,9 +109,10 @@
           register: anydesk_install
 
         - name: install viber
-          ansible.builtin.package:
+          ansible.builtin.dnf:
             name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
             state: latest
+            disable_gpg_check: true
 
         - name: install desktop software
           ansible.builtin.package:
